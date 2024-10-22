@@ -1,10 +1,17 @@
 from dash import dcc, html
 from dash.dependencies import Input, Output, State
-from app import app
-from pages import plots  # Importar la subpágina de análisis
+import dash_bootstrap_components as dbc
+#from app import app
 import pandas as pd
 import io
 import base64
+from dash import Dash
+
+# Crear la aplicación Dash
+app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], suppress_callback_exceptions=True)
+server = app.server
+
+from pages import plots  # Importar la subpágina de análisis
 
 # Layout de la aplicación
 app.layout = html.Div(
@@ -208,3 +215,4 @@ def update_output_filename(filename):
 
 if __name__ == "__main__":
     app.run_server(debug=False)
+
