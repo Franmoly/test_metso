@@ -2,7 +2,7 @@ from dash import dcc, html, Input, Output, State
 import dash
 import plotly.graph_objs as go
 import pandas as pd
-from app import app
+#from app import app
 
 dash.register_page(__name__, path='/plots')
 
@@ -57,7 +57,7 @@ layout = html.Div(
 )
 
 # Callback para actualizar las opciones del Dropdown y graficar los datos
-@app.callback(
+@dash.callback(
     [Output('primary-variable', 'options'),
      Output('secondary-variable', 'options'),
      Output('time-series-graph', 'figure')],
