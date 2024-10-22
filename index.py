@@ -40,28 +40,26 @@ app.layout = html.Div(
     Input('upload-data', 'contents'),
     State('upload-data', 'filename')
 )
+
 def store_uploaded_data(contents, filename):
     if contents is not None:
         content_type, content_string = contents.split(',')
         decoded = base64.b64decode(content_string)
         try:
-            # Leer el archivo Excel desde la columna D hasta N y saltar las primeras 6 filas
-            df = pd.read_excel(io.BytesIO(decoded), sheet_name=0, skiprows=6, usecols="D:N", engine='openpyxl')
-            #print(f"Archivo leído: {filename}")
-            #print("Columnas del DataFrame:", df.columns)
-            #print("Primeras filas del DataFrame:\n", df.head())
+            # Leer el archivo Excel completo y luego seleccionar las columnas deseadas
+            df = pd.read_excel(io.BytesIO(decoded), sheet_name=0, skiprows=6, engine='openpyxl')
+
+            # Seleccionar las columnas que corresponden al rango de D a N
+            df = df.iloc[:, 3:14]  # Esto selecciona las columnas desde la cuarta (D) hasta la décimo cuarta (N)
             
-            # Convertir la primera columna a datetime
+            # Asegurarse de que la primera columna sea tratada como datetime
             df.iloc[:, 0] = pd.to_datetime(df.iloc[:, 0], errors='coerce')
-            #print("Primeras filas después de la conversión a datetime:\n", df.head())
             
             # Convertir el DataFrame a un diccionario para almacenarlo
             return df.to_dict('records')
         except Exception as e:
             print("Error al leer el archivo:", e)
     return None
-
-
 
 # Callback para el enrutamiento de páginas
 @app.callback(
